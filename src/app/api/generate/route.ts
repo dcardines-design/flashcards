@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Topic is required' }, { status: 400 });
   }
 
-  const cardCount = Math.min(Math.max(parseInt(count) || 10, 1), 30);
+  const cardCount = Math.min(Math.max(parseInt(count) || 10, 1), 20);
 
   try {
     const cards = await generateFlashcardsFromTopic(

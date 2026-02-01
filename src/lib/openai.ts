@@ -102,8 +102,8 @@ Return a JSON object with a "cards" array containing objects with "question", "a
       },
     ],
     response_format: { type: 'json_object' },
-    temperature: 0.8,
-    max_tokens: 4000,
+    temperature: 0.7,
+    max_tokens: 2500,
   });
 
   const result = response.choices[0].message.content;

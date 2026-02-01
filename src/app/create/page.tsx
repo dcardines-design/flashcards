@@ -270,9 +270,9 @@ export default function CreatePage() {
               <input
                 type="number"
                 min={1}
-                max={30}
+                max={20}
                 value={cardCount}
-                onChange={(e) => setCardCount(Math.min(30, Math.max(1, parseInt(e.target.value) || 10)))}
+                onChange={(e) => setCardCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 10)))}
                 className="w-14 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-center text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
