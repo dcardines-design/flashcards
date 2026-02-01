@@ -16,10 +16,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-[#0a0a0b] min-h-screen text-white`}>
-        <main className="max-w-lg mx-auto px-4 py-6 pb-24">
+      <body className={`${inter.className} bg-[#0a0a0b] min-h-screen text-white flex flex-col`}>
+        <main className="max-w-lg mx-auto px-4 py-6 pb-24 flex-1">
           {children}
         </main>
+        <footer className="text-center py-4 text-zinc-600 text-sm">
+          Made for Simone, study well
+        </footer>
       </body>
     </html>
   );

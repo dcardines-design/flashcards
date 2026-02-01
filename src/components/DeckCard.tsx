@@ -21,7 +21,7 @@ export default function DeckCard({
   onDelete,
 }: DeckCardProps) {
   return (
-    <div className="group relative bg-zinc-900 rounded-2xl border border-zinc-800 p-5 hover:border-zinc-700 transition-colors">
+    <div className="group relative w-full bg-zinc-900 rounded-2xl border border-zinc-800 p-5 hover:border-zinc-700 transition-colors">
       <Link href={`/deck/${id}`} className="block">
         <div className="flex items-start justify-between mb-3">
           <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl">
