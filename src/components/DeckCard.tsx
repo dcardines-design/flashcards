@@ -32,7 +32,7 @@ export default function DeckCard({
   return (
     <div className="group relative w-full bg-zinc-900 rounded-2xl border border-zinc-800 p-5 hover:border-zinc-700 transition-colors">
       <Link href={`/deck/${id}`} className="block">
-        <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start justify-between mb-4">
           <div className="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl">
             <BookOpen className="w-5 h-5 text-white" />
           </div>
@@ -44,15 +44,15 @@ export default function DeckCard({
           )}
         </div>
 
-        <h3 className="font-semibold text-white text-lg mb-1 line-clamp-1">
+        <h3 className="font-semibold text-white text-lg mb-2 line-clamp-1">
           {title}
         </h3>
 
         {description && (
-          <p className="text-sm text-zinc-500 mb-3 line-clamp-2">{description}</p>
+          <p className="text-sm text-zinc-500 mb-4 line-clamp-2">{description}</p>
         )}
 
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <span className="text-sm text-zinc-500">
             {cardCount} {cardCount === 1 ? 'card' : 'cards'}
           </span>
@@ -68,7 +68,7 @@ export default function DeckCard({
 
         {/* Best performers */}
         {(bestPerformer || bestTime) && (
-          <div className="pt-3 border-t border-zinc-800 space-y-1.5">
+          <div className="pt-4 border-t border-zinc-800 space-y-2">
             {bestPerformer && (
               <div className="flex items-center gap-2 text-xs">
                 <Trophy className="w-3.5 h-3.5 text-amber-400" />
@@ -90,11 +90,11 @@ export default function DeckCard({
       </Link>
 
       {/* Action buttons */}
-      <div className="flex gap-2 mt-3 pt-3 border-t border-zinc-800">
+      <div className="flex gap-3 mt-4 pt-4 border-t border-zinc-800">
         <Link
           href={`/deck/${id}/edit`}
           onClick={(e) => e.stopPropagation()}
-          className="flex-1 py-2 px-3 bg-zinc-800 text-zinc-300 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+          className="flex-1 py-2.5 px-4 bg-zinc-800 text-zinc-300 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
         >
           <Pencil className="w-4 h-4" />
           Edit
@@ -102,7 +102,7 @@ export default function DeckCard({
         <Link
           href={`/deck/${id}/responses`}
           onClick={(e) => e.stopPropagation()}
-          className="flex-1 py-2 px-3 bg-zinc-800 text-zinc-300 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+          className="flex-1 py-2.5 px-4 bg-zinc-800 text-zinc-300 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
         >
           <Users className="w-4 h-4" />
           Responses
