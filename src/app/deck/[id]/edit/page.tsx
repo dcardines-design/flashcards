@@ -10,6 +10,8 @@ import {
   Plus,
   Trash2,
   GripVertical,
+  Sparkles,
+  Send,
 } from 'lucide-react';
 
 interface Flashcard {
@@ -36,6 +38,12 @@ export default function EditDeckPage({ params }: { params: Promise<{ id: string 
   const [description, setDescription] = useState('');
   const [cards, setCards] = useState<Flashcard[]>([]);
   const [newCards, setNewCards] = useState<{ question: string; answer: string; wrong_answers: string[] }[]>([]);
+
+  // AI Chat state
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [cardCount, setCardCount] = useState(5);
+  const [multipleChoice, setMultipleChoice] = useState(false);
 
   useEffect(() => {
     fetchDeck();
@@ -144,6 +152,40 @@ export default function EditDeckPage({ params }: { params: Promise<{ id: string 
     setNewCards(newCards.filter((_, i) => i !== index));
   };
 
+  const handleAiGenerate = async () => {
+    if (!aiPrompt.trim() || aiGenerating) return;
+    setAiGenerating(true);
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic: aiPrompt.trim(),
+          count: cardCount,
+          multipleChoice,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.cards && data.cards.length > 0) {
+          const generatedCards = data.cards.map((card: { question: string; answer: string; wrongAnswers?: string[] }) => ({
+            question: card.question,
+            answer: card.answer,
+            wrong_answers: card.wrongAnswers || ['', '', ''],
+          }));
+          setNewCards([...newCards, ...generatedCards]);
+          setAiPrompt('');
+        }
+      }
+    } catch (error) {
+      console.error('AI generation failed:', error);
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -216,6 +258,65 @@ export default function EditDeckPage({ params }: { params: Promise<{ id: string 
             placeholder="Deck description"
           />
         </div>
+      </div>
+
+      {/* AI Generate Section */}
+      <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4 mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="w-5 h-5 text-emerald-400" />
+          <h2 className="text-lg font-semibold text-white">AI Generate</h2>
+        </div>
+
+        {/* Options */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-zinc-400">Cards:</label>
+            <select
+              value={cardCount}
+              onChange={(e) => setCardCount(Number(e.target.value))}
+              className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
+            >
+              {[3, 5, 10, 15, 20].map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={multipleChoice}
+              onChange={(e) => setMultipleChoice(e.target.checked)}
+              className="w-4 h-4 rounded border-zinc-600 bg-zinc-800 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
+            />
+            <span className="text-sm text-zinc-400">Multiple Choice</span>
+          </label>
+        </div>
+
+        {/* Chat Input */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={aiPrompt}
+            onChange={(e) => setAiPrompt(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAiGenerate()}
+            placeholder="Describe what cards to generate..."
+            className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
+          />
+          <button
+            onClick={handleAiGenerate}
+            disabled={!aiPrompt.trim() || aiGenerating}
+            className="px-4 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {aiGenerating ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Send className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+        <p className="text-xs text-zinc-600 mt-2">
+          e.g. "Add more questions about photosynthesis" or "Generate harder questions"
+        </p>
       </div>
 
       {/* Existing Cards */}
