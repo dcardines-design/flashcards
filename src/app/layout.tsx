@@ -1,8 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Flashcards',
@@ -16,7 +13,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-[#0a0a0b] min-h-screen text-white flex flex-col`}>
+      <head>
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=overused-grotesk@400,500,600,700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="font-sans bg-[#0a0a0b] min-h-screen text-white flex flex-col">
         <main className="sm:max-w-lg mx-auto px-4 py-6 pb-24 flex-1 w-full">
           {children}
         </main>
