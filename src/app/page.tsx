@@ -51,7 +51,7 @@ export default function Home() {
             {decks.length} {decks.length === 1 ? 'deck' : 'decks'}
           </p>
         </div>
-        <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl">
+        <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl">
           <BookOpen className="w-6 h-6 text-white" />
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function Home() {
       {/* Content */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+          <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
         </div>
       ) : decks.length === 0 ? (
         <div className="text-center py-16">
@@ -74,7 +74,7 @@ export default function Home() {
           </p>
           <Link
             href="/create"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
             Create Deck
@@ -99,7 +99,7 @@ export default function Home() {
       {/* FAB */}
       <Link
         href="/create"
-        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
       >
         <Plus className="w-6 h-6 text-white" />
       </Link>

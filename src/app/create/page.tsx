@@ -212,14 +212,14 @@ export default function CreatePage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Deck title"
-          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-lg font-medium text-white placeholder-zinc-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-lg font-medium text-white placeholder-zinc-600 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
         />
         <input
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description (optional)"
-          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-300 placeholder-zinc-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-300 placeholder-zinc-600 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
         />
       </div>
 
@@ -229,7 +229,7 @@ export default function CreatePage() {
           onClick={() => setActiveTab('ai')}
           className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
             activeTab === 'ai'
-              ? 'bg-indigo-600 text-white'
+              ? 'bg-emerald-600 text-white'
               : 'text-zinc-500 hover:text-zinc-300'
           }`}
         >
@@ -273,7 +273,7 @@ export default function CreatePage() {
                 max={20}
                 value={cardCount}
                 onChange={(e) => setCardCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 10)))}
-                className="w-14 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-center text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-14 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-center text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
@@ -285,11 +285,11 @@ export default function CreatePage() {
               className="flex items-center gap-2 text-sm"
             >
               {multipleChoice ? (
-                <ToggleRight className="w-6 h-6 text-indigo-500" />
+                <ToggleRight className="w-6 h-6 text-emerald-500" />
               ) : (
                 <ToggleLeft className="w-6 h-6 text-zinc-600" />
               )}
-              <span className={multipleChoice ? 'text-indigo-400' : 'text-zinc-500'}>
+              <span className={multipleChoice ? 'text-emerald-400' : 'text-zinc-500'}>
                 Multiple Choice
               </span>
             </button>
@@ -302,7 +302,7 @@ export default function CreatePage() {
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                     msg.role === 'user'
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-zinc-800 text-zinc-200'
                   }`}
                 >
@@ -348,7 +348,7 @@ export default function CreatePage() {
             {isGenerating && (
               <div className="flex justify-start">
                 <div className="bg-zinc-800 rounded-2xl px-4 py-3 flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
+                  <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
                   <span className="text-sm text-zinc-400">
                     Generating {multipleChoice ? 'multiple choice ' : ''}flashcards...
                   </span>
@@ -370,14 +370,14 @@ export default function CreatePage() {
               }}
               placeholder="Enter a topic (e.g., 'World War 2') or paste your notes..."
               rows={2}
-              className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+              className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
             />
             <button
               onClick={handleAIGenerate}
               disabled={!inputText.trim() || isGenerating}
               className={`px-4 rounded-xl transition-colors ${
                 inputText.trim() && !isGenerating
-                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  ? 'bg-emerald-600 text-white hover:bg-emerald-700'
                   : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
               }`}
             >
@@ -396,11 +396,11 @@ export default function CreatePage() {
               className="flex items-center gap-2 text-sm"
             >
               {multipleChoice ? (
-                <ToggleRight className="w-6 h-6 text-indigo-500" />
+                <ToggleRight className="w-6 h-6 text-emerald-500" />
               ) : (
                 <ToggleLeft className="w-6 h-6 text-zinc-600" />
               )}
-              <span className={multipleChoice ? 'text-indigo-400' : 'text-zinc-500'}>
+              <span className={multipleChoice ? 'text-emerald-400' : 'text-zinc-500'}>
                 Generate Multiple Choice Options
               </span>
             </button>
@@ -412,7 +412,7 @@ export default function CreatePage() {
           />
 
           {isExtracting && (
-            <div className="flex items-center justify-center gap-2 py-8 text-indigo-400">
+            <div className="flex items-center justify-center gap-2 py-8 text-emerald-400">
               <Loader2 className="w-5 h-5 animate-spin" />
               <span className="text-sm font-medium">
                 Extracting {multipleChoice ? 'multiple choice ' : ''}flashcards...
@@ -421,15 +421,15 @@ export default function CreatePage() {
           )}
 
           {extractedCards.length > 0 && (
-            <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-4">
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-indigo-400">
+                <span className="text-sm font-medium text-emerald-400">
                   {extractedCards.length} cards extracted
                   {extractedCards[0]?.wrongAnswers ? ' (multiple choice)' : ''}
                 </span>
                 <button
                   onClick={handleAddExtractedCards}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
                 >
                   <Check className="w-4 h-4" />
                   Add All
@@ -503,7 +503,7 @@ export default function CreatePage() {
             disabled={!title.trim() || cards.length === 0 || isSaving}
             className={`w-full py-3.5 px-4 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors ${
               title.trim() && cards.length > 0 && !isSaving
-                ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                ? 'bg-emerald-600 text-white hover:bg-emerald-700'
                 : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
             }`}
           >

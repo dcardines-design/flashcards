@@ -102,7 +102,7 @@ export default function FileUploader({ onFileContent, isProcessing }: FileUpload
           onDrop={handleDrop}
           className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
             isDragging
-              ? 'border-indigo-500 bg-indigo-500/10'
+              ? 'border-emerald-500 bg-emerald-500/10'
               : 'border-zinc-700 hover:border-zinc-600 bg-zinc-900'
           }`}
         >
@@ -114,7 +114,7 @@ export default function FileUploader({ onFileContent, isProcessing }: FileUpload
           />
           <Upload
             className={`w-10 h-10 mx-auto mb-3 ${
-              isDragging ? 'text-indigo-400' : 'text-zinc-500'
+              isDragging ? 'text-emerald-400' : 'text-zinc-500'
             }`}
           />
           <p className="text-zinc-300 font-medium">
@@ -126,8 +126,8 @@ export default function FileUploader({ onFileContent, isProcessing }: FileUpload
         </div>
       ) : (
         <div className="flex items-center gap-3 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
-          <div className="p-2 bg-indigo-500/20 rounded-lg">
-            <FileText className="w-5 h-5 text-indigo-400" />
+          <div className="p-2 bg-emerald-500/20 rounded-lg">
+            <FileText className="w-5 h-5 text-emerald-400" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">
@@ -138,7 +138,7 @@ export default function FileUploader({ onFileContent, isProcessing }: FileUpload
             </p>
           </div>
           {isProcessing ? (
-            <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
+            <Loader2 className="w-5 h-5 text-emerald-400 animate-spin" />
           ) : (
             <button
               onClick={clearFile}

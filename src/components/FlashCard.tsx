@@ -179,7 +179,7 @@ export default function FlashCard({
 
           {/* Back (Answer) */}
           <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-            <div className="h-full bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 flex flex-col">
+            <div className="h-full bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-6 flex flex-col">
               <div className="text-xs font-medium text-white/70 uppercase tracking-wide mb-2">
                 Answer
               </div>

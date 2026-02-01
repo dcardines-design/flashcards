@@ -75,7 +75,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ id: string
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ id: string
     return (
       <div className="text-center py-20">
         <p className="text-zinc-500 mb-4">Deck not found</p>
-        <Link href="/" className="text-indigo-400 font-medium hover:underline">
+        <Link href="/" className="text-emerald-400 font-medium hover:underline">
           Go back
         </Link>
       </div>
@@ -111,7 +111,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ id: string
       {responses.length > 0 && (
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="bg-zinc-900 rounded-xl p-4 text-center border border-zinc-800">
-            <Users className="w-5 h-5 text-indigo-400 mx-auto mb-1" />
+            <Users className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
             <p className="text-2xl font-bold text-white">{responses.length}</p>
             <p className="text-xs text-zinc-500">Participants</p>
           </div>
@@ -154,7 +154,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ id: string
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-white font-bold">
                     {response.participant_name.charAt(0).toUpperCase()}
                   </div>
                   <div>

@@ -24,7 +24,7 @@ export default function DeckCard({
     <div className="group relative w-full bg-zinc-900 rounded-2xl border border-zinc-800 p-5 hover:border-zinc-700 transition-colors">
       <Link href={`/deck/${id}`} className="block">
         <div className="flex items-start justify-between mb-3">
-          <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl">
+          <div className="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl">
             <BookOpen className="w-5 h-5 text-white" />
           </div>
           {progress > 0 && (
@@ -51,7 +51,7 @@ export default function DeckCard({
           {/* Progress bar */}
           <div className="w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all"
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>

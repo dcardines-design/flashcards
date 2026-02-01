@@ -194,7 +194,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
       </div>
     );
   }
@@ -225,7 +225,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
     return (
       <div className="max-w-md mx-auto">
         {/* Deck info */}
-        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white text-center mb-6">
+        <div className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-6 text-white text-center mb-6">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <BookOpen className="w-8 h-8" />
           </div>
@@ -253,7 +253,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
             placeholder="Your name"
             className={`w-full px-4 py-3 bg-zinc-900 border ${
               nameError ? 'border-red-500' : 'border-zinc-700'
-            } rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors`}
+            } rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors`}
           />
           {nameError && (
             <p className="text-red-400 text-sm mt-1">Please enter your name</p>
@@ -263,7 +263,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         {/* Start button */}
         <button
           onClick={handleStart}
-          className="w-full py-4 px-6 bg-indigo-600 text-white rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-colors mb-4"
+          className="w-full py-4 px-6 bg-emerald-600 text-white rounded-xl font-semibold text-lg hover:bg-emerald-700 transition-colors mb-4"
         >
           Start Studying
         </button>
@@ -288,7 +288,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
     return (
       <div>
         {/* Complete Card */}
-        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white text-center mb-6">
+        <div className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-6 text-white text-center mb-6">
           <CheckCircle2 className="w-16 h-16 mx-auto mb-4 opacity-90" />
           <h2 className="text-2xl font-bold mb-2">Great job, {participantName}!</h2>
           <p className="text-white/80">
@@ -337,7 +337,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         <div className="space-y-3">
           <button
             onClick={restartSession}
-            className="w-full py-3.5 px-4 bg-indigo-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors"
+            className="w-full py-3.5 px-4 bg-emerald-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors"
           >
             <RotateCcw className="w-5 h-5" />
             Study Again
@@ -374,7 +374,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
       <div className="mb-2">
         <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-300"
+            className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -392,7 +392,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
               <span className="font-medium">{streak}</span>
             </div>
           )}
-          <div className="flex items-center gap-1 text-indigo-400">
+          <div className="flex items-center gap-1 text-emerald-400">
             <Trophy className="w-4 h-4" />
             <span className="font-medium">{score}</span>
           </div>
@@ -418,7 +418,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         </span>
         {accuracy > 0 && (
           <span>
-            <span className="text-indigo-400 font-medium">{accuracy}%</span>{' '}
+            <span className="text-emerald-400 font-medium">{accuracy}%</span>{' '}
             accuracy
           </span>
         )}

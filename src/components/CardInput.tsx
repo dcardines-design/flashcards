@@ -37,7 +37,7 @@ export default function CardInput({ onAddCard }: CardInputProps) {
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Enter your question..."
           rows={3}
-          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-shadow text-white placeholder-zinc-600"
+          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none transition-shadow text-white placeholder-zinc-600"
         />
       </div>
 
@@ -54,7 +54,7 @@ export default function CardInput({ onAddCard }: CardInputProps) {
           onChange={(e) => setAnswer(e.target.value)}
           placeholder="Enter the answer..."
           rows={3}
-          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-shadow text-white placeholder-zinc-600"
+          className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none transition-shadow text-white placeholder-zinc-600"
         />
       </div>
 
@@ -63,7 +63,7 @@ export default function CardInput({ onAddCard }: CardInputProps) {
         disabled={!isValid}
         className={`w-full py-3 px-4 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors ${
           isValid
-            ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+            ? 'bg-emerald-600 text-white hover:bg-emerald-700'
             : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
         }`}
       >

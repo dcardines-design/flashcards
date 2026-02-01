@@ -148,7 +148,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
       </div>
     );
   }
@@ -159,7 +159,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
         <p className="text-zinc-500 mb-4">No cards in this deck</p>
         <Link
           href="/"
-          className="text-indigo-400 font-medium hover:underline"
+          className="text-emerald-400 font-medium hover:underline"
         >
           Go back
         </Link>
@@ -192,7 +192,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
         </div>
 
         {/* Complete Card */}
-        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white text-center mb-6">
+        <div className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-6 text-white text-center mb-6">
           <CheckCircle2 className="w-16 h-16 mx-auto mb-4 opacity-90" />
           <h2 className="text-2xl font-bold mb-2">Session Complete!</h2>
           <p className="text-white/80">
@@ -246,7 +246,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
         <div className="space-y-3">
           <button
             onClick={restartSession}
-            className="w-full py-3.5 px-4 bg-indigo-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors"
+            className="w-full py-3.5 px-4 bg-emerald-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors"
           >
             <RotateCcw className="w-5 h-5" />
             Study Again
@@ -304,7 +304,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
       <div className="mb-2">
         <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-300"
+            className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -322,7 +322,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
               <span className="font-medium">{streak}</span>
             </div>
           )}
-          <div className="flex items-center gap-1 text-indigo-400">
+          <div className="flex items-center gap-1 text-emerald-400">
             <Trophy className="w-4 h-4" />
             <span className="font-medium">{score}</span>
           </div>
@@ -348,7 +348,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
         </span>
         {accuracy > 0 && (
           <span>
-            <span className="text-indigo-400 font-medium">{accuracy}%</span>{' '}
+            <span className="text-emerald-400 font-medium">{accuracy}%</span>{' '}
             accuracy
           </span>
         )}
