@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, use } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -31,6 +32,7 @@ interface DeckData {
 
 export default function ResponsesPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const [deck, setDeck] = useState<DeckData | null>(null);
   const [responses, setResponses] = useState<SharedResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,12 +97,12 @@ export default function ResponsesPage({ params }: { params: Promise<{ id: string
     <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <Link
-          href={`/deck/${id}`}
+        <button
+          onClick={() => router.back()}
           className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
         >
           <ArrowLeft className="w-5 h-5 text-zinc-400" />
-        </Link>
+        </button>
         <div>
           <h1 className="text-xl font-bold text-white">{deck.title}</h1>
           <p className="text-sm text-zinc-500">Shared Responses</p>

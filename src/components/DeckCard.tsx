@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, TrendingUp, Trash2, Trophy, Clock } from 'lucide-react';
+import { BookOpen, TrendingUp, Trash2, Trophy, Clock, Pencil, Users } from 'lucide-react';
 
 interface DeckCardProps {
   id: string;
@@ -88,6 +88,26 @@ export default function DeckCard({
           </div>
         )}
       </Link>
+
+      {/* Action buttons */}
+      <div className="flex gap-2 mt-3 pt-3 border-t border-zinc-800">
+        <Link
+          href={`/deck/${id}/edit`}
+          onClick={(e) => e.stopPropagation()}
+          className="flex-1 py-2 px-3 bg-zinc-800 text-zinc-300 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+        >
+          <Pencil className="w-4 h-4" />
+          Edit
+        </Link>
+        <Link
+          href={`/deck/${id}/responses`}
+          onClick={(e) => e.stopPropagation()}
+          className="flex-1 py-2 px-3 bg-zinc-800 text-zinc-300 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+        >
+          <Users className="w-4 h-4" />
+          Responses
+        </Link>
+      </div>
 
       {/* Delete button */}
       {onDelete && (

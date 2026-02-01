@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   if (!supabase) return notConfigured();
 
   const body = await request.json();
-  const { deck_id, question, answer } = body;
+  const { deck_id, question, answer, wrong_answers } = body;
 
   if (!deck_id || !question?.trim() || !answer?.trim()) {
     return NextResponse.json(
@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
       deck_id,
       question: question.trim(),
       answer: answer.trim(),
+      wrong_answers: wrong_answers || null,
     })
     .select()
     .single();
@@ -33,6 +34,36 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json(data, { status: 201 });
+}
+
+// PUT update flashcard content
+export async function PUT(request: NextRequest) {
+  if (!supabase) return notConfigured();
+
+  const body = await request.json();
+  const { id, question, answer, wrong_answers } = body;
+
+  if (!id) {
+    return NextResponse.json({ error: 'Flashcard ID is required' }, { status: 400 });
+  }
+
+  const updateData: { question?: string; answer?: string; wrong_answers?: string[] | null } = {};
+  if (question !== undefined) updateData.question = question.trim();
+  if (answer !== undefined) updateData.answer = answer.trim();
+  if (wrong_answers !== undefined) updateData.wrong_answers = wrong_answers;
+
+  const { data, error } = await supabase
+    .from('flashcards')
+    .update(updateData)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data);
 }
 
 // PATCH update flashcard stats
