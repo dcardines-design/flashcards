@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, TrendingUp, Trash2 } from 'lucide-react';
+import { BookOpen, TrendingUp, Trash2, Trophy, Clock } from 'lucide-react';
 
 interface DeckCardProps {
   id: string;
@@ -9,6 +9,8 @@ interface DeckCardProps {
   description?: string | null;
   cardCount: number;
   progress?: number;
+  bestPerformer?: { name: string; score: number } | null;
+  bestTime?: { name: string; seconds: number } | null;
   onDelete?: () => void;
 }
 
@@ -18,8 +20,15 @@ export default function DeckCard({
   description,
   cardCount,
   progress = 0,
+  bestPerformer,
+  bestTime,
   onDelete,
 }: DeckCardProps) {
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
   return (
     <div className="group relative w-full bg-zinc-900 rounded-2xl border border-zinc-800 p-5 hover:border-zinc-700 transition-colors">
       <Link href={`/deck/${id}`} className="block">
@@ -43,7 +52,7 @@ export default function DeckCard({
           <p className="text-sm text-zinc-500 mb-3 line-clamp-2">{description}</p>
         )}
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-3">
           <span className="text-sm text-zinc-500">
             {cardCount} {cardCount === 1 ? 'card' : 'cards'}
           </span>
@@ -56,6 +65,28 @@ export default function DeckCard({
             />
           </div>
         </div>
+
+        {/* Best performers */}
+        {(bestPerformer || bestTime) && (
+          <div className="pt-3 border-t border-zinc-800 space-y-1.5">
+            {bestPerformer && (
+              <div className="flex items-center gap-2 text-xs">
+                <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-zinc-500">Best:</span>
+                <span className="text-zinc-300 font-medium">{bestPerformer.name}</span>
+                <span className="text-amber-400 ml-auto">{bestPerformer.score} pts</span>
+              </div>
+            )}
+            {bestTime && (
+              <div className="flex items-center gap-2 text-xs">
+                <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-zinc-500">Fastest:</span>
+                <span className="text-zinc-300 font-medium">{bestTime.name}</span>
+                <span className="text-emerald-400 ml-auto">{formatTime(bestTime.seconds)}</span>
+              </div>
+            )}
+          </div>
+        )}
       </Link>
 
       {/* Delete button */}

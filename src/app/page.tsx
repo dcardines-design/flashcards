@@ -90,6 +90,8 @@ export default function Home() {
               description={deck.description}
               cardCount={deck.card_count || 0}
               progress={deck.progress || 0}
+              bestPerformer={deck.best_performer}
+              bestTime={deck.best_time}
               onDelete={() => handleDelete(deck.id)}
             />
           ))}

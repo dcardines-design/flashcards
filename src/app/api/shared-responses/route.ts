@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+const notConfigured = () =>
+  NextResponse.json({ error: 'Database not configured' }, { status: 503 });
+
 export async function POST(request: NextRequest) {
+  if (!supabase) return notConfigured();
+
   const body = await request.json();
   const {
     deck_id,
@@ -12,6 +17,7 @@ export async function POST(request: NextRequest) {
     wrong_count,
     best_streak,
     accuracy,
+    time_seconds,
   } = body;
 
   if (!deck_id || !participant_name?.trim()) {
@@ -32,6 +38,7 @@ export async function POST(request: NextRequest) {
       wrong_count: wrong_count || 0,
       best_streak: best_streak || 0,
       accuracy: accuracy || 0,
+      time_seconds: time_seconds || 0,
     })
     .select()
     .single();
@@ -45,6 +52,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  if (!supabase) return notConfigured();
+
   const { searchParams } = new URL(request.url);
   const deckId = searchParams.get('deck_id');
 

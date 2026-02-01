@@ -13,7 +13,8 @@ export async function GET() {
     .select(`
       *,
       flashcards:flashcards(count),
-      sessions:study_sessions(score, accuracy)
+      sessions:study_sessions(score, accuracy),
+      shared_responses:shared_responses(participant_name, score, accuracy, time_seconds)
     `)
     .order('created_at', { ascending: false });
 
@@ -29,12 +30,49 @@ export async function GET() {
       ? Math.max(...sessions.map((s: { accuracy: number }) => s.accuracy || 0))
       : 0;
 
+    // Find best performer from shared responses
+    const responses = deck.shared_responses || [];
+    let bestPerformer = null;
+    let bestTime = null;
+
+    if (responses.length > 0) {
+      // Best score performer
+      const bestScoreResponse = responses.reduce((best: { score: number; participant_name: string } | null, r: { score: number; participant_name: string }) =>
+        !best || r.score > best.score ? r : best
+      , null);
+
+      if (bestScoreResponse) {
+        bestPerformer = {
+          name: bestScoreResponse.participant_name,
+          score: bestScoreResponse.score,
+        };
+      }
+
+      // Best time (fastest with time > 0)
+      const responsesWithTime = responses.filter((r: { time_seconds: number }) => r.time_seconds > 0);
+      if (responsesWithTime.length > 0) {
+        const fastestResponse = responsesWithTime.reduce((best: { time_seconds: number; participant_name: string } | null, r: { time_seconds: number; participant_name: string }) =>
+          !best || r.time_seconds < best.time_seconds ? r : best
+        , null);
+
+        if (fastestResponse) {
+          bestTime = {
+            name: fastestResponse.participant_name,
+            seconds: fastestResponse.time_seconds,
+          };
+        }
+      }
+    }
+
     return {
       ...deck,
       card_count: cardCount,
       progress: Math.round(bestAccuracy),
+      best_performer: bestPerformer,
+      best_time: bestTime,
       flashcards: undefined,
       sessions: undefined,
+      shared_responses: undefined,
     };
   });
 

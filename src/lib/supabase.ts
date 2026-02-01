@@ -23,6 +23,8 @@ export interface Deck {
   created_at: string;
   card_count?: number;
   progress?: number;
+  best_performer?: { name: string; score: number } | null;
+  best_time?: { name: string; seconds: number } | null;
 }
 
 export interface Flashcard {

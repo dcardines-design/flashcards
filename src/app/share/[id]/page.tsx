@@ -115,7 +115,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
   ) => {
     if (shuffledCards.length > 0 && currentIndex >= shuffledCards.length - 1) {
       setIsComplete(true);
-      saveResponse(finalScore, finalCorrect, finalWrong, finalMaxStreak);
+      saveResponse(finalScore, finalCorrect, finalWrong, finalMaxStreak, elapsedTime);
     } else {
       setCurrentIndex(currentIndex + 1);
     }
@@ -125,7 +125,8 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
     finalScore: number,
     finalCorrect: number,
     finalWrong: number,
-    finalMaxStreak: number
+    finalMaxStreak: number,
+    finalTime: number
   ) => {
     if (!deck || responseSaved || !participantName) return;
 
@@ -144,6 +145,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         wrong_count: finalWrong,
         best_streak: finalMaxStreak,
         accuracy: finalAccuracy,
+        time_seconds: finalTime,
       }),
     });
 

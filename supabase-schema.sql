@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS shared_responses (
   wrong_count INT DEFAULT 0,
   best_streak INT DEFAULT 0,
   accuracy DECIMAL(5,2),
+  time_seconds INT DEFAULT 0,
   completed_at TIMESTAMPTZ DEFAULT NOW()
 );
 
