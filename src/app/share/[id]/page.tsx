@@ -1,10 +1,7 @@
 'use client';
 
 import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import {
-  ArrowLeft,
   Trophy,
   Flame,
   Target,
@@ -12,25 +9,30 @@ import {
   RotateCcw,
   CheckCircle2,
   Share2,
+  BookOpen,
+  Clock,
 } from 'lucide-react';
 import FlashCard from '@/components/FlashCard';
-import { Flashcard } from '@/lib/supabase';
+
+interface Flashcard {
+  id: string;
+  question: string;
+  answer: string;
+  wrong_answers: string[] | null;
+}
 
 interface DeckData {
   id: string;
   title: string;
   description: string | null;
   flashcards: Flashcard[];
-  best_score: number;
-  best_accuracy: number;
-  best_streak: number;
 }
 
-export default function StudyPage({ params }: { params: Promise<{ id: string }> }) {
+export default function SharePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const router = useRouter();
   const [deck, setDeck] = useState<DeckData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -38,17 +40,32 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const [sessionSaved, setSessionSaved] = useState(false);
-
-  const copyShareLink = () => {
-    const shareUrl = `${window.location.origin}/share/${id}`;
-    navigator.clipboard.writeText(shareUrl);
-    alert('Share link copied!');
-  };
+  const [started, setStarted] = useState(false);
+  const [participantName, setParticipantName] = useState('');
+  const [nameError, setNameError] = useState(false);
+  const [responseSaved, setResponseSaved] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [shuffledCards, setShuffledCards] = useState<Flashcard[]>([]);
 
   useEffect(() => {
     fetchDeck();
   }, [id]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (started && !isComplete) {
+      interval = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [started, isComplete]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const fetchDeck = async () => {
     try {
@@ -57,81 +74,101 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
         const data = await res.json();
         setDeck(data);
       } else {
-        router.push('/');
+        setError('Deck not found');
       }
     } catch {
-      router.push('/');
+      setError('Failed to load deck');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCorrect = async () => {
-    const card = deck?.flashcards[currentIndex];
-    if (!card) return;
-
-    await fetch('/api/flashcards', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: card.id, correct: true }),
-    });
-
+  const handleCorrect = () => {
     const newStreak = streak + 1;
     const streakBonus = newStreak >= 3 ? 5 : 0;
     const points = 10 + streakBonus;
+    const newScore = score + points;
+    const newCorrect = correct + 1;
+    const newMaxStreak = Math.max(maxStreak, newStreak);
 
-    setScore(score + points);
+    setScore(newScore);
     setStreak(newStreak);
-    setMaxStreak(Math.max(maxStreak, newStreak));
-    setCorrect(correct + 1);
+    setMaxStreak(newMaxStreak);
+    setCorrect(newCorrect);
 
-    nextCard();
+    nextCard(true, newScore, newCorrect, wrong, newMaxStreak);
   };
 
-  const handleWrong = async () => {
-    const card = deck?.flashcards[currentIndex];
-    if (!card) return;
-
-    await fetch('/api/flashcards', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: card.id, correct: false }),
-    });
-
+  const handleWrong = () => {
+    const newWrong = wrong + 1;
     setStreak(0);
-    setWrong(wrong + 1);
-
-    nextCard();
+    setWrong(newWrong);
+    nextCard(false, score, correct, newWrong, maxStreak);
   };
 
-  const nextCard = () => {
-    if (deck && currentIndex >= deck.flashcards.length - 1) {
+  const nextCard = (
+    wasCorrect: boolean,
+    finalScore: number,
+    finalCorrect: number,
+    finalWrong: number,
+    finalMaxStreak: number
+  ) => {
+    if (shuffledCards.length > 0 && currentIndex >= shuffledCards.length - 1) {
       setIsComplete(true);
-      saveSession();
+      saveResponse(finalScore, finalCorrect, finalWrong, finalMaxStreak);
     } else {
       setCurrentIndex(currentIndex + 1);
     }
   };
 
-  const saveSession = async () => {
-    if (!deck || sessionSaved) return;
+  const saveResponse = async (
+    finalScore: number,
+    finalCorrect: number,
+    finalWrong: number,
+    finalMaxStreak: number
+  ) => {
+    if (!deck || responseSaved || !participantName) return;
 
-    const total = correct + wrong + 1;
-    const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+    const total = finalCorrect + finalWrong;
+    const finalAccuracy = total > 0 ? Math.round((finalCorrect / total) * 100) : 0;
 
-    await fetch('/api/sessions', {
+    await fetch('/api/shared-responses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         deck_id: deck.id,
-        score,
+        participant_name: participantName,
+        score: finalScore,
         cards_reviewed: total,
-        streak: maxStreak,
-        accuracy,
+        correct_count: finalCorrect,
+        wrong_count: finalWrong,
+        best_streak: finalMaxStreak,
+        accuracy: finalAccuracy,
       }),
     });
 
-    setSessionSaved(true);
+    setResponseSaved(true);
+  };
+
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const handleStart = () => {
+    if (!participantName.trim()) {
+      setNameError(true);
+      return;
+    }
+    setNameError(false);
+    if (deck) {
+      setShuffledCards(shuffleArray(deck.flashcards));
+    }
+    setStarted(true);
   };
 
   const restartSession = () => {
@@ -142,7 +179,16 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
     setCorrect(0);
     setWrong(0);
     setIsComplete(false);
-    setSessionSaved(false);
+    setResponseSaved(false);
+    setElapsedTime(0);
+    if (deck) {
+      setShuffledCards(shuffleArray(deck.flashcards));
+    }
+  };
+
+  const copyShareLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copied to clipboard!');
   };
 
   if (loading) {
@@ -153,16 +199,18 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
     );
   }
 
-  if (!deck || deck.flashcards.length === 0) {
+  if (error || !deck) {
     return (
       <div className="text-center py-20">
-        <p className="text-zinc-500 mb-4">No cards in this deck</p>
-        <Link
-          href="/"
-          className="text-indigo-400 font-medium hover:underline"
-        >
-          Go back
-        </Link>
+        <p className="text-zinc-500 mb-4">{error || 'Deck not found'}</p>
+      </div>
+    );
+  }
+
+  if (deck.flashcards.length === 0) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-zinc-500">No cards in this deck</p>
       </div>
     );
   }
@@ -172,31 +220,79 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
   const accuracy =
     correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
 
+  // Start screen
+  if (!started) {
+    return (
+      <div className="max-w-md mx-auto">
+        {/* Deck info */}
+        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white text-center mb-6">
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BookOpen className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">{deck.title}</h1>
+          {deck.description && (
+            <p className="text-white/80 text-sm mb-2">{deck.description}</p>
+          )}
+          <p className="text-white/60 text-sm">
+            {totalCards} {totalCards === 1 ? 'card' : 'cards'}
+          </p>
+        </div>
+
+        {/* Name input */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-zinc-400 mb-2">
+            Enter your name to start
+          </label>
+          <input
+            type="text"
+            value={participantName}
+            onChange={(e) => {
+              setParticipantName(e.target.value);
+              setNameError(false);
+            }}
+            placeholder="Your name"
+            className={`w-full px-4 py-3 bg-zinc-900 border ${
+              nameError ? 'border-red-500' : 'border-zinc-700'
+            } rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors`}
+          />
+          {nameError && (
+            <p className="text-red-400 text-sm mt-1">Please enter your name</p>
+          )}
+        </div>
+
+        {/* Start button */}
+        <button
+          onClick={handleStart}
+          className="w-full py-4 px-6 bg-indigo-600 text-white rounded-xl font-semibold text-lg hover:bg-indigo-700 transition-colors mb-4"
+        >
+          Start Studying
+        </button>
+
+        {/* Share button */}
+        <button
+          onClick={copyShareLink}
+          className="w-full py-3 px-4 bg-zinc-800 text-zinc-300 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+        >
+          <Share2 className="w-5 h-5" />
+          Copy Share Link
+        </button>
+      </div>
+    );
+  }
+
   // Complete screen
   if (isComplete) {
     const finalAccuracy =
       correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0;
-    const isNewBest = score > deck.best_score;
 
     return (
       <div>
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <Link
-            href="/"
-            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 text-zinc-400" />
-          </Link>
-          <h1 className="text-xl font-bold text-white">{deck.title}</h1>
-        </div>
-
         {/* Complete Card */}
         <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white text-center mb-6">
           <CheckCircle2 className="w-16 h-16 mx-auto mb-4 opacity-90" />
-          <h2 className="text-2xl font-bold mb-2">Session Complete!</h2>
+          <h2 className="text-2xl font-bold mb-2">Great job, {participantName}!</h2>
           <p className="text-white/80">
-            You reviewed all {totalCards} cards
+            You reviewed all {totalCards} cards in {formatTime(elapsedTime)}
           </p>
         </div>
 
@@ -208,11 +304,6 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
             </div>
             <p className="text-2xl font-bold text-white">{score}</p>
             <p className="text-xs text-zinc-500">Points</p>
-            {isNewBest && (
-              <span className="text-xs text-green-400 font-medium">
-                New Best!
-              </span>
-            )}
           </div>
           <div className="bg-zinc-900 rounded-xl p-4 text-center border border-zinc-800">
             <div className="flex items-center justify-center gap-1 text-orange-400 mb-1">
@@ -231,7 +322,7 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
         </div>
 
         {/* Results breakdown */}
-        <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800 mb-8">
+        <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800 mb-6">
           <div className="flex justify-between items-center mb-2">
             <span className="text-zinc-400">Correct</span>
             <span className="font-medium text-green-400">{correct}</span>
@@ -256,20 +347,8 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
             className="w-full py-3.5 px-4 bg-zinc-800 text-zinc-300 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
           >
             <Share2 className="w-5 h-5" />
-            Share Deck
+            Share This Deck
           </button>
-          <Link
-            href={`/deck/${id}/responses`}
-            className="block w-full py-3.5 px-4 bg-zinc-800 text-zinc-300 rounded-xl font-medium text-center hover:bg-zinc-700 transition-colors"
-          >
-            View Shared Responses
-          </Link>
-          <Link
-            href="/"
-            className="block w-full py-3.5 px-4 bg-zinc-800/50 text-zinc-400 rounded-xl font-medium text-center hover:bg-zinc-700/50 transition-colors"
-          >
-            Back to Decks
-          </Link>
         </div>
       </div>
     );
@@ -279,22 +358,13 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <Link
-          href="/"
-          className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5 text-zinc-400" />
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-lg font-bold text-white line-clamp-1">
-            {deck.title}
-          </h1>
-        </div>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-lg font-bold text-white line-clamp-1">
+          {deck.title}
+        </h1>
         <button
           onClick={copyShareLink}
           className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
-          title="Share deck"
         >
           <Share2 className="w-5 h-5 text-zinc-400" />
         </button>
@@ -331,9 +401,9 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
 
       {/* Flashcard */}
       <FlashCard
-        question={deck.flashcards[currentIndex].question}
-        answer={deck.flashcards[currentIndex].answer}
-        wrongAnswers={deck.flashcards[currentIndex].wrong_answers || undefined}
+        question={shuffledCards[currentIndex]?.question || ''}
+        answer={shuffledCards[currentIndex]?.answer || ''}
+        wrongAnswers={shuffledCards[currentIndex]?.wrong_answers || undefined}
         onCorrect={handleCorrect}
         onWrong={handleWrong}
       />
@@ -352,6 +422,14 @@ export default function StudyPage({ params }: { params: Promise<{ id: string }> 
             accuracy
           </span>
         )}
+      </div>
+
+      {/* Timer */}
+      <div className="flex justify-center mt-4">
+        <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 rounded-full border border-zinc-800">
+          <Clock className="w-4 h-4 text-zinc-500" />
+          <span className="text-zinc-400 font-mono">{formatTime(elapsedTime)}</span>
+        </div>
       </div>
     </div>
   );
