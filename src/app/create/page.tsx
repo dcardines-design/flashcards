@@ -263,36 +263,38 @@ export default function CreatePage() {
       {/* Tab Content */}
       {activeTab === 'ai' ? (
         <div className="space-y-4">
-          {/* Settings row */}
-          <div className="flex items-center gap-4 p-3 bg-zinc-900 border border-zinc-800 rounded-xl">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-zinc-400">Cards:</span>
+          {/* Settings */}
+          <div className="space-y-3">
+            {/* Cards count */}
+            <div className="flex items-center gap-3 p-3 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <span className="text-sm text-zinc-400">Number of cards:</span>
               <input
                 type="number"
                 min={1}
                 max={20}
                 value={cardCount}
                 onChange={(e) => setCardCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 10)))}
-                className="w-14 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-center text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-16 px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-center text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
 
-            <div className="h-4 w-px bg-zinc-700" />
-
             {/* Multiple choice toggle */}
-            <button
-              onClick={() => setMultipleChoice(!multipleChoice)}
-              className="flex items-center gap-2 text-sm"
-            >
-              {multipleChoice ? (
-                <ToggleRight className="w-6 h-6 text-emerald-500" />
-              ) : (
-                <ToggleLeft className="w-6 h-6 text-zinc-600" />
-              )}
-              <span className={multipleChoice ? 'text-emerald-400' : 'text-zinc-500'}>
-                Multiple Choice
-              </span>
-            </button>
+            <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <button
+                onClick={() => setMultipleChoice(!multipleChoice)}
+                className="flex items-center justify-between w-full"
+              >
+                <span className="text-sm text-zinc-400">Multiple Choice Mode</span>
+                {multipleChoice ? (
+                  <ToggleRight className="w-8 h-8 text-emerald-500" />
+                ) : (
+                  <ToggleLeft className="w-8 h-8 text-zinc-600" />
+                )}
+              </button>
+              <p className="text-xs text-zinc-600 mt-1">
+                Generate wrong answers for each question
+              </p>
+            </div>
           </div>
 
           {/* Chat messages */}
