@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, TrendingUp, Trash2, Trophy, Clock, Pencil, Users } from 'lucide-react';
+import { BookOpen, TrendingUp, Trophy, Clock, Pencil, Users } from 'lucide-react';
 
 interface DeckCardProps {
   id: string;
@@ -11,7 +11,6 @@ interface DeckCardProps {
   progress?: number;
   bestPerformer?: { name: string; score: number } | null;
   bestTime?: { name: string; seconds: number } | null;
-  onDelete?: () => void;
 }
 
 export default function DeckCard({
@@ -22,7 +21,6 @@ export default function DeckCard({
   progress = 0,
   bestPerformer,
   bestTime,
-  onDelete,
 }: DeckCardProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -109,19 +107,6 @@ export default function DeckCard({
         </Link>
       </div>
 
-      {/* Delete button */}
-      {onDelete && (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onDelete();
-          }}
-          className="absolute top-3 right-3 p-2 opacity-0 group-hover:opacity-100 hover:bg-zinc-800 rounded-lg transition-all"
-        >
-          <Trash2 className="w-4 h-4 text-red-400 hover:text-red-300" />
-        </button>
-      )}
     </div>
   );
 }

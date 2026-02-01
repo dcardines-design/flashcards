@@ -28,19 +28,6 @@ export default function Home() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this deck and all its cards?')) return;
-
-    try {
-      const res = await fetch(`/api/decks?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setDecks(decks.filter((d) => d.id !== id));
-      }
-    } catch (error) {
-      console.error('Failed to delete deck:', error);
-    }
-  };
-
   return (
     <div>
       {/* Header */}
@@ -92,7 +79,6 @@ export default function Home() {
               progress={deck.progress || 0}
               bestPerformer={deck.best_performer}
               bestTime={deck.best_time}
-              onDelete={() => handleDelete(deck.id)}
             />
           ))}
         </div>
